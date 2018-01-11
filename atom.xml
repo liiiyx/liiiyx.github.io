@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>liiiyx&#39;s Blog</title>
+  
+  <subtitle>一如既往, 万事胜意 / 1024199338@qq.com</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2018-01-11T06:47:02.338Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>liiiyx</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello Hexo</title>
+    <link href="http://yoursite.com/2018/01/11/Hello%20Hexo/"/>
+    <id>http://yoursite.com/2018/01/11/Hello Hexo/</id>
+    <published>2018-01-11T06:34:08.820Z</published>
+    <updated>2018-01-11T06:47:02.338Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在整理有道笔记的内容，平常都是做伸手党，在互联网各位大神的肩膀上分析/解决问题，于是就想以博客的形式输出一些内容，主要是<strong>Android系统源码</strong>方面的，希望能在积累沉淀自己的同时，帮助到一些遇到了类似问题的人。可能会偶尔发表自己的一些生活感想，就当是日记记录吧。</p><p>作为一个程序员，本着亲自动手的想法，博客当然是想自己搭建了，所以查询了相关资料，折腾了一个上午总算搭建好了。（使用Github + Hexo的方式）</p><p>教程链接：</p><p><a href="https://www.jianshu.com/p/4eaddcbe4d12" target="_blank" rel="noopener">Mac</a></p><p><a href="http://blog.csdn.net/wapchief/article/details/54602515" target="_blank" rel="noopener">Windows</a></p><p>Hello Hexo，第一篇章。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近在整理有道笔记的内容，平常都是做伸手党，在互联网各位大神的肩膀上分析/解决问题，于是就想以博客的形式输出一些内容，主要是&lt;strong&gt;Android系统源码&lt;/strong&gt;方面的，希望能在积累沉淀自己的同时，帮助到一些遇到了类似问题的人。可能会偶尔发表自己的一些生活
+      
+    
+    </summary>
+    
+      <category term="Diary" scheme="http://yoursite.com/categories/Diary/"/>
+    
+    
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+</feed>
