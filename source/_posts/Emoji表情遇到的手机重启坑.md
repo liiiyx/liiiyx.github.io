@@ -7,19 +7,13 @@ categories: Android
 
 ## 问题描述
 
-在项目上，遇到了编辑指纹名称时输入特殊字符，随后会出现手机重启的问题，crash log如下：
+在项目上，遇到了编辑指纹名称时输入特殊字符，随后会出现手机重启的奇葩问题。当输入一个emoji表情时，调用Google语音输入法，点击删除键，会出现 � 的非法符号，保存的时候底层检测到该符号为非法符号，会报Exception，导致system server进程直接挂掉，手机就自动重启了。
+
+<!--more-->
+
+crash log如下：
 
 ![crash log信息](Emoji表情遇到的手机重启坑/1.png)
-
-原因是：
-当输入一个emoji表情时，调用Google语音输入法，点击删除键，会出现 � 的非法符号，保存的时候底层检测到该符号为非法符号，会报Exception，导致system server进程直接挂掉，手机就自动重启了。
-
-经分析，在Java中，程序代码分为内码和外码，两者的编码是不一样的。
-- 内码：某种语言运行时，其char和string在内存中的编码方式；
-
-- 外码：除了内码的都是外码；
-
-（备注：在Java中，源代码编译产生的目标代码文件（可执行文件或class文件）中的编码方式都属于外码。）
 
 ## Unicode和UTF编码的区别
 
@@ -166,13 +160,14 @@ private static boolean isEmojiCharacter(int first) {
 >
 > 出处：https://www.jianshu.com/p/eb4ab57393f3
 
-这里我们只关注第一点`“按键消息，由客户端进程接收，如果客户端进程判断当前有输入法窗口，则需要跨进程转交给InputMethod进程”` ，那么在输入法界面按下删除键，会触发什么KeyEvent呢？我们可以对EditText设置OnKeyListener来监听Key事件：
+这里我们只关注第一点 "*按键消息，由客户端进程接收，如果客户端进程判断当前有输入法窗口，则需要跨进程转交给InputMethod进程*  "，那么在输入法界面按下删除键，会触发什么KeyEvent呢？我们可以对EditText设置OnKeyListener来监听Key事件：
 
 ```java
 editText.setOnKeyListener(new OnKeyListener() {                 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+        //You can identify which key pressed 
+      	//by checking keyCode value with KeyEvent.KEYCODE_
         if(keyCode == KeyEvent.KEYCODE_DEL) {  
             Log.w(TAG, "KEYCODE_DEL");
         }
