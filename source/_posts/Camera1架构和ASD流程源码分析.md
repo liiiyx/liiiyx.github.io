@@ -93,7 +93,7 @@ camera架构图如下：
 
 ### 3.2 AdditionManager.java
 
-```
+```java
 public void onCameraParameterReady(boolean isMode) {
     // 参数变化时会调用到这里
     Log.i(TAG, "[onCameraParameterReady]isMode = " + isMode);
@@ -118,7 +118,7 @@ public void onCameraParameterReady(boolean isMode) {
 
 ### 3.3 Asd.java
 
-```
+```java
 @Override
 public void open() {
     Log.d(TAG, "[open]...");
@@ -142,7 +142,7 @@ public void startAsd() {
 
 ### 3.4 CameraManager.java
 
-```
+```java
 @Override
 public void setAsdCallback(AsdListener asdListener) {
 	// 创建AsdListener实例
@@ -169,7 +169,7 @@ private class CameraHandler extends Handler {
 ```
 ### 3.5 AndroidCamera.java
 
-```
+```java
 public void setAsdCallback(AsdCallback cb) {
 	// 调用Camera1接口设置Asd的回调
     mCamera.setAsdCallback(cb);
@@ -178,7 +178,7 @@ public void setAsdCallback(AsdCallback cb) {
 
 ### 3.6 android.hardware.Camera.java
 
-```
+```java
 /**
  * @hide
  * @internal
@@ -194,7 +194,7 @@ public final void setAsdCallback(AsdCallback cb) {
 
 ### 3.7 AsdCallback的创建
 
-```
+```java
 // Asd.java的内部类，实现了AsdListener接口
 // 用于接收来自HAL层的消息，然后通知camera ui做出相应处理
 private final AsdListener mASDCaptureCallback = new AsdListener() {
@@ -232,7 +232,7 @@ private final AsdListener mASDCaptureCallback = new AsdListener() {
 - **android_hardware_Camera.cpp :**  jni层的实现
 
 ### 4.3 FD.Client.Thread.cpp
-```
+```java
 // PreviewClient的state发生变化时会发送eID_WAKEUP消息
 // FDClient应该也会接收到，这里没去细看
 bool FDClient::threadLoop()
@@ -307,7 +307,7 @@ void FDClient::onClientThreadLoop()
 }
 ```
 ### 4.4 AsdClient.cpp
-```
+```java
 void
 AsdClient::
 update(MUINT8 * OT_Buffer, MINT32 a_Buffer_width, MINT32 a_Buffer_height, MINT32 a_FaceNum)
@@ -401,7 +401,7 @@ update(MUINT8 * OT_Buffer, MINT32 a_Buffer_width, MINT32 a_Buffer_height, MINT32
 
 Asd初始化：
 
-```
+```java
 MINT32 halASD::mHalAsdInit(void* AAAData,void* working_buffer,MUINT8 SensorType, MINT32 Asd_Buf_Width, MINT32 Asd_Buf_Height)
 {
 
@@ -468,7 +468,7 @@ MINT32 halASD::mHalAsdInit(void* AAAData,void* working_buffer,MUINT8 SensorType,
 }
 ```
 Asd场景检测：
-```
+```java
 MINT32 halASD::mHalAsdDecider(void* AAAData,MINT32 Face_Num,mhal_ASD_DECIDER_UI_SCENE_TYPE_ENUM &Scene)
 {
       MINT32 Retcode = S_ASD_OK;
@@ -500,7 +500,7 @@ MINT32 halASD::mHalAsdDecider(void* AAAData,MINT32 Face_Num,mhal_ASD_DECIDER_UI_
 ### 4.6 CameraClient.cpp
 
 首先先来说说AsdClient中提到的mNotifyCb函数，这个函数是在CameraClient的initialize函数中被定义的。我们来看看代码：
-```
+```java
 status_t CameraClient::initialize(CameraModule *module) {
     ...
     mHardware = new CameraHardwareInterface(camera_device_name);
@@ -516,7 +516,7 @@ status_t CameraClient::initialize(CameraModule *module) {
 
 接下来我们看看Cam1DeviceBase setCallback函数的实现：
 
-```
+```java
 // Set the notification and data callbacks
 void Cam1DeviceBase::setCallbacks(
     camera_notify_callback notify_cb, //notify Callback函数
@@ -552,7 +552,7 @@ void Cam1DeviceBase::setCallbacks(
 ```
 刚才我们分析到AsdClient在进行场景检测得到结果后，调用了mNotifyCb函数；根据上面的分析，mNotifyCb函数指向CameraClient的notifyCallback函数，来看看该函数的代码：
 
-```
+```java
 // Callback messages can be dispatched to internal handlers or pass to our
 // client's callback functions, depending on the message type.
 //
@@ -593,7 +593,7 @@ void CameraClient::notifyCallback(int32_t msgType, int32_t ext1,
 }
 ```
 mNotifyCb函数调用传入的msgType是`MTK_CAMERA_MSG_EXT_NOTIFY` ，那么接下来会执行到`handleMtkExtNotify`，该函数在Mediatek自己写的CameraClient.cpp中实现。
-```
+```java
 void CameraClient::handleMtkExtNotify(int32_t ext1, int32_t ext2)
 {
     int32_t const extMsgType = ext1;
@@ -625,7 +625,7 @@ void CameraClient::handleMtkExtNotify(int32_t ext1, int32_t ext2)
 ```
 
 传入的ext1为`MTK_CAMERA_MSG_EXT_NOTIFY_ASD`，所以又走回Android原生 CameraClient 的handleGenericNotify函数：
-```
+```java
 void CameraClient::handleGenericNotify(int32_t msgType,
     int32_t ext1, int32_t ext2) {
     //!++
@@ -655,14 +655,14 @@ void CameraClient::handleGenericNotify(int32_t msgType,
 ```
 
 由上可知消息是通过
-```
+```java
 sp<hardware::ICameraClient> c = mRemoteCallback; 
 c->notifyCallback(msgType, ext1, ext2);
 ```
 的方式发送出去的。
 
 那这个mRemoteCallback又是在哪里初始化的呢？检索了一下，是在CameraClient::connect中被赋值了，继续跟踪下去，会发现是在CameraClient的构造函数里初始化的，这里涉及到了多层继承(CameraClient->CameraService->Client)，看看代码：
-```
+```java
 step1：
 CameraClient::CameraClient(const sp<CameraService>& cameraService,
         const sp<hardware::ICameraClient>& cameraClient, // 这里传入了一个ICameraClient
@@ -702,7 +702,7 @@ CameraService::Client::Client(const sp<CameraService>& cameraService,
 
 那么思路就清晰了，我们只需要看一下这个CameraClient进行了初始化就可以了。从Camera的connect方法看一下：
 
-```
+```java
 step 1：
 sp<Camera> Camera::connect(int cameraId, const String16& clientPackageName,
         int clientUid, int clientPid)
@@ -759,7 +759,7 @@ status_t CameraService::connect(const sp<ICameraClient>& cameraClient, int camer
 ```
 
 所以，使用的c->notifyCallback调用的是`Camera::notifyCallback`。
-```
+```java
 // callback from camera service
 void Camera::notifyCallback(int32_t msgType, int32_t ext1, int32_t ext2)
 {
@@ -787,7 +787,7 @@ void CameraBase<TCam, TCamTraits>::notifyCallback(int32_t msgType, int32_t ext1,
 首先我们先看一下mListener的设置代码：
 
 
-```
+```java
 static jint android_hardware_Camera_native_setup(...)
 {
     sp<Camera> camera;
@@ -797,7 +797,7 @@ static jint android_hardware_Camera_native_setup(...)
 }
 ```
 所以listener->notify调用的是`MtkJNICameraContext::notify`函数：
-```
+```java
 void JNICameraContext::notify(int32_t msgType, int32_t ext1, int32_t ext2)
 {
     ALOGV("notify");
@@ -816,7 +816,7 @@ fields.post_event = GetStaticMethodIDOrDie(env, clazz, "postEventFromNative",
 
 那么我们来看一下Camera.java中做了什么操作：
 
-```
+```java
 private static void postEventFromNative(Object camera_ref,
                                         int what, int arg1, int arg2, Object obj)
 {
